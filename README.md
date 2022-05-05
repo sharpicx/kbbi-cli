@@ -44,6 +44,7 @@ move the script to `$PATH`.
 ```sh
 [~] $ git clone https://github.com/sharpicx/kbbi-cli
 [~] $ cd kbbi-cli
+[~] $ chmod +x kbbi
 [~/kbbi-cli] $ mv kbbi ~/.local/bin/.
 ```
 Now, you have installed the script! congrats!.
