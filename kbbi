@@ -1,0 +1,116 @@
+#! /bin/env bash
+
+clear
+
+# banner untuk memperindah CLI.
+banner() {
+    echo ''
+    echo -e "${red}██     ██ ██████  ██████  ██${reset}"
+    echo -e "${red} ██   ██   ██   ██ ██   ██ ██${reset}"
+    echo -e "${red}  █████     ██████  ██████  ██${reset}"
+    echo -e "${red}   ██  ██    ██   ██ ██   ██ ██${reset}"
+    echo -e "${red}    ██   ██   ██████  ██████  ██${reset}"
+    echo "" && echo -e "${blue}by sharpicx${reset}"
+    echo -e "${back_blue}${back_blue} I love how interactive shell built ${reset}${reset}"
+    printf '%30s' | tr " " "-" && echo ""
+    echo -e "
+${kuning}[1]. KBBI (cari harfiah).
+[2]. Sinonim
+[3]. Antonim
+[4]. Rima
+[0]. Exit${reset}"
+    echo ""
+}
+
+# color variables.
+# semua dibentuk light wkwkwk
+reset="\033[1:0m" #reset color njing
+red="\033[1:31m" #merah
+blue="\033[1:34m" # biru
+kuning="\033[1:35m" # yellow gais
+back_red="\033[1:41m" # merah background
+back_blue="\033[1:44m" # biru background
+black="\033[1:30m" # warna item
+white="\033[1:107m" # warna putih
+green="\033[1:36m"
+
+kbbi_main() {
+    read -p 'Target# ' target_kata
+    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" && echo ''
+    sleep 1
+    curl -sX GET https://kbbi.web.id/$target_kata | hxnormalize -x | hxselect -i 'div#d1' | html2text | sed 's/\*//g;s/\_//g'
+    # dont know what should be added
+}
+
+sinonim_main() {
+    read -p 'Target# ' target_kata
+    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" 
+    sleep 1 
+    # if statement
+    output=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
+    error=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
+    if [[ $output != $error ]]; then
+        echo -e "${green}Output berhasil ditemukan!${reset}" && echo ''
+        for i in $output; do
+            echo $i
+        done
+        echo '' && echo -e "${red}Program terminated.${reset}"
+    else
+        echo -e "${red}Output tidak ditemukan!${reset}"
+    fi
+}
+
+antonim_main() {
+    read -p 'Target# ' target_kata
+    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}"
+    sleep 1 
+    # if statement as well :D
+    output=$(curl -sLX GET https://antonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
+    error=$(curl -sLX GET https://antonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
+    if [[ $output != $error ]]; then
+        echo -e "${green}Output berhasil ditemukan!${reset}" && echo ''
+        for i in $output; do 
+            echo $i
+        done
+        echo '' && echo -e "${red} Program terminated.${reset}"
+    else
+        echo -e "${red}Output tidak ditemukan!${reset}"
+    fi
+    
+}
+
+rima_main() {
+    read -p 'Target# ' target_kata
+    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}"
+    sleep 1
+    echo ''
+    curl -sX GET https://kuncitts.com/rima-kata/$target_kata | hxnormalize -x | hxselect -i 'div#msgSubmit' | hxselect -i 'div.panel-body' | html2text | sed 's/https\:\/\/kuncitts.com\/arti-//g;s/kata\/[a-z]*//g;s/(//g;s/)//g;s/\[//g;s/\]//g;s/\,//g;/^$/d;s/\.//g'
+    echo ''
+    echo -e "${red}Program terminated${reset}."
+}
+
+option() {
+    read -p "option# " pilihan_opsi
+    case "$pilihan_opsi" in
+        1) #dah selesai ini dulu aja
+            kbbi_main
+        ;;
+        2) # lanjut ntar
+            sinonim_main
+        ;;
+        3) # antonim
+            antonim_main 
+        ;;
+        4) # rima
+            rima_main
+        ;;
+        *)
+            echo -e "${red}program terminated.${reset}"
+            exit 0
+        ;;
+    esac
+    
+}
+
+banner
+option
