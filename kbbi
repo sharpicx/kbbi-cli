@@ -113,4 +113,10 @@ option() {
 }
 
 banner
-option
+main() {
+    while true; do
+        option
+    done
+}
+main
+
