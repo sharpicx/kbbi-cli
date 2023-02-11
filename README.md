@@ -44,12 +44,12 @@ move the script to `$PATH`.
 Now, you have installed the script! congrats!.
 
 ## preview:
-* [asciinema](https://asciinema.org/a/OQ4NGqTMAaNDtDQxQPhUZSrQz)
+* <https://asciinema.org/a/lS3cwpA3iYO44Cuzfly0tDbS3>
 
-* GIF:
-![demo](demo.gif)
+* GIF (The Old One):
+![demo](demo.gif) 
 
-* Appearance:<br/>
+* Appearance (The Old One):<br/> 
 ![lmfao](https://i.ibb.co/5W1wrwL/image.png)
 
 ## Acknowledgement
