@@ -46,9 +46,6 @@ Now, you have installed the script! congrats!.
 ## preview:
 * <https://asciinema.org/a/lS3cwpA3iYO44Cuzfly0tDbS3>
 
-* GIF (The Old One):
-![demo](demo.gif) 
-
 * Appearance (The Old One):<br/> 
 ![lmfao](https://i.postimg.cc/fLmRxX2t/image.png)
 
