@@ -1,10 +1,4 @@
 ```sh
-██     ██ ██████  ██████  ██
- ██   ██   ██   ██ ██   ██ ██
-  █████     ██████  ██████  ██
-   ██  ██    ██   ██ ██   ██ ██
-    ██   ██   ██████  ██████  ██
-    
 made by me, a personal tool to dig more stuff about indonesia linguistic
 ```
 ## Prologue:
