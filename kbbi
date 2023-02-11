@@ -4,24 +4,24 @@ clear
 
 # banner untuk memperindah CLI.
 banner() {
-    echo ''
-    echo -e "${red}██     ██ ██████  ██████  ██${reset}"
-    echo -e "${red} ██   ██   ██   ██ ██   ██ ██${reset}"
-    echo -e "${red}  █████     ██████  ██████  ██${reset}"
-    echo -e "${red}   ██  ██    ██   ██ ██   ██ ██${reset}"
-    echo -e "${red}    ██   ██   ██████  ██████  ██${reset}"
-    echo "" && echo -e "${blue}by sharpicx${reset}"
-    echo -e "${back_blue}${back_blue} I love how interactive shell built ${reset}${reset}"
-    printf '%30s' | tr " " "-" && echo ""
-    echo -e "
-${kuning}[1]. KBBI (cari harfiah).
-[2]. Sinonim
-[3]. Antonim
-[4]. Rima
-[0]. Exit${reset}"
-    echo ""
+echo -e "${red}  ▄█   ▄█▄ ▀█████████▄  ▀█████████▄   ▄█       
+  ███ ▄███▀   ███    ███   ███    ███ ███       
+  ███▐██▀     ███    ███   ███    ███ ███▌      
+ ▄█████▀     ▄███▄▄▄██▀   ▄███▄▄▄██▀  ███▌      
+▀▀█████▄    ▀▀███▀▀▀██▄  ▀▀███▀▀▀██▄  ███▌      
+  ███▐██▄     ███    ██▄   ███    ██▄ ███       
+  ███ ▀███▄   ███    ███   ███    ███ ███       
+  ███   ▀█▀ ▄█████████▀  ▄█████████▀  █▀        
+  ▀${reset}"
+  echo -e "${blue}by ${pink}sharpicx${reset}${reset}"
+  echo -e "${blue}Kamus Besar Bahasa Indonesia${reset}"
+  echo -e "${kuning}[1] KBBI
+[2] Sinonim
+[3] Antonim
+[4] Rima
+[0] Exit${reset}"
 }
-
+  
 # color variables.
 # semua dibentuk light wkwkwk
 reset="\033[1:0m" #reset color njing
@@ -33,70 +33,119 @@ back_blue="\033[1:44m" # biru background
 black="\033[1:30m" # warna item
 white="\033[1:107m" # warna putih
 green="\033[1:36m"
+pink="\033[1:32m"
+
+# animation
+function animation() {
+  local i sp n # declaration
+  chars='/-\|'
+  n=${#chars}
+  printf ' '
+  while sleep 0.1; do
+    printf '%s\b' "${sp:i++%n:1}"
+  done
+}
 
 kbbi_main() {
-    read -p 'Target# ' target_kata
-    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" && echo ''
-    sleep 1
-    curl -sX GET https://kbbi.web.id/$target_kata | hxnormalize -x | hxselect -i 'div#d1' | html2text | sed 's/\*//g;s/\_//g'
-    # dont know what should be added
+  read -p $'\e[1:32m~choice/KBBI/>\e[1m '  kata
+  sleep 2
+  #echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" && echo ''
+  hasil=$(curl --raw -sLXGET "https://kbbi.web.id/$kata" | hxnormalize -x | hxselect -ci 'div#d1' | html2text | tr -d '*_[0-9]\\' | tr ':' '\n')
+  if [ "$hasil" ]; then
+    echo -e "${green}Penjelasan Ditemukan!${reset}"
+    for i in ${hasil[@]}; do 
+      echo -e "${blue}$i${reset}" | tr '\n' ' '
+    done
+  else
+    echo -e "${red}Penjelasan Tidak Ditemukan!${reset}"
+  fi
+  # curl -sLX GET "https://kbbi.co.id/arti-kata/apa" | hxnormalize -x | hxremove 'i, b, br' | hxselect -i 'div#main' | hxselect -i 'p.arti' | tr -d '_[0-9]-' | tr ':' ';' | html2text| sed -s '/^$/d' 2>/dev/null
+  # curl -sX GET https://kbbi.web.id/$kata | hxnormalize -x | hxselect -i 'div#d1' | html2text | sed 's/\*//g;s/\_//g'
+  # dont know what should be added
 }
 
-sinonim_main() {
-    read -p 'Target# ' target_kata
-    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" 
-    sleep 1 
-    # if statement
-    output=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
-    error=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
-    if [[ $output != $error ]]; then
-        echo -e "${green}Output berhasil ditemukan!${reset}" && echo ''
-        for i in $output; do
-            echo $i
-        done
-        echo '' && echo -e "${red}Program terminated.${reset}"
-    else
-        echo -e "${red}Output tidak ditemukan!${reset}"
-    fi
+sinonim() {
+  echo -e "\"${red}- If the word you've been added has space, please give a dash (-) to it
+for example: anjing hutan
+to: anjing-hutan
+because i'm lazy to add the feature in\"${reset}"
+  read -p $'\e[1:32m~choice/Sinonim/>\e[1m ' choice
+  sleep 2
+  hasil=$(curl -sLX GET "https://www.artikatakbbi.com/sinonim-$choice" | hxnormalize -x | hxselect -i 'p#psinonim' | html2text | cut -f2 -d ':' | tr -d '[[:space:]].;[]()<>".' | tr ',' ' ' | sort 2>/dev/null)
+  # error=$(curl -sLX GET "https://www.artikatakbbi.com/sinonim-$choice" | hxnormalize -x | hxselect -i 'p.sub-heading-text-404' | html2text | cut -f1 -d ' ' 2>/dev/null)
+  if [ "$hasil" ]; then
+    echo -e "${green}Sinonim ditemukan!${reset}"
+    for i in ${hasil[@]}; do 
+      echo -e "${blue}${i^}${reset}" | sort
+      sleep 1
+    done
+  else
+    echo -e "${red}Sinonim tidak ditemukan!${reset}" 
+  fi
 }
+
+# the site is getting died so i comment out this function
+# sinonim_main() {
+#    read -p 'Target# ' target_kata
+#    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}" 
+#    sleep 1 
+#    # if statement
+#    output=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
+#    error=$(curl -sLX GET https://sinonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
+#    if [[ $output != $error ]]; then
+#        echo -e "${green}Output berhasil ditemukan!${reset}" && echo ''
+#        for i in $output; do
+#            echo $i
+#        done
+#        echo '' && echo -e "${red}Program terminated.${reset}"
+#    else
+#        echo -e "${red}Output tidak ditemukan!${reset}"
+#    fi
+#}
 
 antonim_main() {
-    read -p 'Target# ' target_kata
-    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}"
-    sleep 1 
-    # if statement as well :D
-    output=$(curl -sLX GET https://antonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
-    error=$(curl -sLX GET https://antonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
-    if [[ $output != $error ]]; then
-        echo -e "${green}Output berhasil ditemukan!${reset}" && echo ''
-        for i in $output; do 
-            echo $i
-        done
-        echo '' && echo -e "${red} Program terminated.${reset}"
-    else
-        echo -e "${red}Output tidak ditemukan!${reset}"
-    fi
-    
+  read -p $'\e[1:32m~choice/Antonim/>\e[1m ' choice
+  sleep 1 
+  # if statement as well :D
+  hasil=$(curl -sLX GET "https://antonim.lektur.id/$choice" | hxnormalize -x | hxselect -ci 'div.content' | hxselect -ci 'ol' | html2text | awk '{print $2}' | sed -s '/^$/d' | sort 2>/dev/null)
+  # hasil=$(curl -sLX GET https://antonim.lektur.id/$choice | hxnormalize -x | hxselect -i 'div.content' | hxselect -i 'ol' | html2text | awk '{print $2}' | sort 2>/dev/null)
+  # error=$(curl -sLX GET https://antonim.lektur.id/$target_kata | hxnormalize -x | hxselect -i 'p.text-center' | html2text 2>/dev/null)
+  if [ "$hasil" ]; then
+      echo -e "${green}Antonim ditemukan!${reset}"
+      for i in ${hasil[@]}; do 
+        echo -e "${blue}$i ${reset}"
+        sleep 1
+      done
+  else
+    echo -e "${red}Antonim tidak ditemukan!${reset}"
+  fi  
 }
 
 rima_main() {
-    read -p 'Target# ' target_kata
-    echo '' && echo -e "${back_red}${black} ---output--- ${reset}${reset}"
-    sleep 1
-    echo ''
-    curl -sX GET https://kuncitts.com/rima-kata/$target_kata | hxnormalize -x | hxselect -i 'div#msgSubmit' | hxselect -i 'div.panel-body' | html2text | sed 's/https\:\/\/kuncitts.com\/arti-//g;s/kata\/[a-z]*//g;s/(//g;s/)//g;s/\[//g;s/\]//g;s/\,//g;/^$/d;s/\.//g'
-    echo ''
-    echo -e "${red}Program terminated${reset}."
+  read -p $'\e[1:32m~choice/Rima/>\e[1m ' choice
+  hasil=$(curl -sX GET https://kuncitts.com/rima-kata/$choice | hxnormalize -x | hxselect -i 'div#msgSubmit' | hxselect -i 'div.panel-body' | html2text | tr -d "\) \/ \. \: \- \(" | sed -s 's/httpskuncittscomarti//g; s/katazuriat//g' | cut -f2 -d '[' | tr -d ']' | sort 2>/dev/null)
+  #hasil=$(curl -sX GET https://kuncitts.com/rima-kata/$choice | hxnormalize -x | hxselect -i 'div#msgSubmit' | hxselect -i 'div.panel-body' | html2text | sed 's/https\:\/\/kuncitts.com\/arti-//g;s/kata\/[a-z]*//g;s/(//g;s/)//g;s/\[//g;s/\]//g;s/\,//g;/^$/d;s/\.//g')
+  sleep 1
+  if [ "$hasil" ]; then
+    echo -e "${green}Rima Ditemukan!${reset}"
+    for i in ${hasil[@]}; do
+      echo -e "$blue ${i^} ${reset}" | sort
+      sleep 1
+    done
+  else
+    echo -e "${red}Rima tidak Ditemukan!${reset}"
+  fi
+  echo -e "${red}Program Dimatikan!${reset}"
 }
 
 option() {
-    read -p "option# " pilihan_opsi
+    read -p $'\e[1:32m~choose\e[1m> ' pilihan_opsi
     case "$pilihan_opsi" in
         1) #dah selesai ini dulu aja
             kbbi_main
         ;;
         2) # lanjut ntar
-            sinonim_main
+            sinonim
         ;;
         3) # antonim
             antonim_main 
@@ -105,18 +154,14 @@ option() {
             rima_main
         ;;
         *)
-            echo -e "${red}program terminated.${reset}"
+            echo -e "${red}terminated.${reset}"
             exit 0
         ;;
     esac
     
 }
 
-banner
-main() {
-    while true; do
-        option
-    done
-}
-main
-
+while true; do
+    banner
+    option
+done
