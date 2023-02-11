@@ -50,7 +50,7 @@ Now, you have installed the script! congrats!.
 ![demo](demo.gif) 
 
 * Appearance (The Old One):<br/> 
-![lmfao](https://i.ibb.co/5W1wrwL/image.png)
+![lmfao](https://i.postimg.cc/fLmRxX2t/image.png)
 
 ## Acknowledgement
 * <https://github.com/jhagas/kbbi-cli/> for inspiring me up to build this project.
