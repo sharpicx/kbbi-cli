@@ -44,7 +44,8 @@ move the script to `$PATH`.
 Now, you have installed the script! congrats!.
 
 ## preview:
-* <https://asciinema.org/a/lS3cwpA3iYO44Cuzfly0tDbS3>
+
+[](<https://asciinema.org/a/lS3cwpA3iYO44Cuzfly0tDbS3>)
 
 * Appearance (The Old One):<br/> 
 ![lmfao](https://i.postimg.cc/fLmRxX2t/image.png)
