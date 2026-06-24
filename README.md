@@ -1,3 +1,10 @@
+# kbbi-cli
+
+> [!CAUTION]
+> This project is no longer maintained. It was created as a learning project when I was practicing shell/Bash scripting.
+>
+> **_sharpicx – 24 June 2026_**
+
 ```sh
 made by me, a personal tool to dig more stuff about indonesia linguistic
 ```
